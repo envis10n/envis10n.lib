@@ -1,14 +1,48 @@
 import { u8, u16 } from "./numerics.ts";
 
+/**
+ * A generic interface for a class to implement memory-esque functionality.
+ */
 export interface Memory {
+  /**
+   * Read a single byte.
+   * @param address The address to read this byte from.
+   */
   read(address: Number): u8;
+  /**
+   * Read 2 bytes in LE order as a 16-bit number.
+   * @param address The address to start reading bytes from.
+   */
   read_u16(address: Number): u16;
+  /**
+   * Write a single byte at a specific address.
+   * @param address The address to write to.
+   * @param data The value to write. Is converted to a u8 before writing.
+   */
   write(address: Number, data: Number): void;
+  /**
+   * Writes 2 bytes in LE order beginning at the specified address.
+   * @param address The address to begin writing to.
+   * @param data The value to write. Is converted to a u16 before writing.
+   */
   write_u16(address: Number, data: Number): void;
-  block_copy(src: ArrayLike<Number>, offset?: Number, end?: Number): void;
+  /**
+   * Copy a block of data from an array.
+   * @param src The array to copy from.
+   * @param offset The offset to start copying to.
+   * @param srcOffset The offset to start reading from.
+   * @param end The offset to stop reading from.
+   */
+  block_copy(src: ArrayLike<Number>, offset: Number, srcOffset?: Number, end?: Number): void;
+  /**
+   * Create a reference-inequal copy.
+   */
   clone(): Memory;
 }
 
+/**
+ * A buffer backed by a Uint8Array that implements Memory and can read and write u8 and u16 values.
+ */
 export class Buffer implements Memory {
   private readonly _back: Uint8Array;
   constructor(size: number);

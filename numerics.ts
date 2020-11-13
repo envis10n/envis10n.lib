@@ -7,11 +7,11 @@ function wrap(value: number, max: number, min: number): number {
 }
 
 function wrap_u8(value: number = 0): number {
-  return wrap(value, 255, 0);
+  return wrap(value, 0xFF, 0);
 }
 
 function wrap_u16(value: number = 0): number {
-  return wrap(value, 65535, 0);
+  return wrap(value, 0xFFFF, 0);
 }
 
 function split_u16(u: u16): [u8, u8] {
@@ -20,6 +20,11 @@ function split_u16(u: u16): [u8, u8] {
   return [v2.as_u8(), v1.as_u8()]; // LE ordering
 }
 
+/**
+ * A class representing a 16-bit (2 byte) unsigned number.
+ * 
+ * Note: All values put into a u16 will be wrapped to 0-65535
+ */
 export class u16 extends Number {
   constructor(value?: Number) {
     super(wrap_u16(value?.valueOf()));
@@ -37,7 +42,7 @@ export class u16 extends Number {
     return new u16(this.valueOf());
   }
   public static MAX(): u16 {
-    return new u16(65535);
+    return new u16(0xFFFF);
   }
   public static MIN(): u16 {
     return new u16();
@@ -74,12 +79,17 @@ export class u16 extends Number {
   }
 }
 
+/**
+ * A class representing an 8-bit (1 byte) unsigned number.
+ * 
+ * Note: All values put into a u8 will be wrapped to 0-255
+ */
 export class u8 extends Number {
   constructor(value?: Number) {
     super(wrap_u8(value?.valueOf()));
   }
   public static MAX(): u8 {
-    return new u8(255);
+    return new u8(0xFF);
   }
   public static MIN(): u8 {
     return new u8();

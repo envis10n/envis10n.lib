@@ -1,6 +1,6 @@
-import { assertEquals, assertNotStrictEquals, assertStrictEquals } from "https://deno.land/std@0.77.0/testing/asserts.ts";
-import { Buffer } from "./buffer.ts";
-import { u8 } from "./numerics.ts";
+import { assertEquals, assertNotStrictEquals } from "https://deno.land/std@0.77.0/testing/asserts.ts";
+import { Buffer } from "../buffer.ts";
+import { u8 } from "../numerics.ts";
 
 Deno.test("buffer_write_read", () => {
   const buf = new Buffer(16);

@@ -72,10 +72,10 @@ export class Buffer implements Memory {
     this.write(addr, s[0]);
     this.write(addr.add(1), s[1]);
   }
-  public copy(src: ArrayLike<Number>, offset: Number, srcOffset: Number = 0, end: Number = src.length) {
+  public copy(src: ArrayLike<Number>, offset: Number, srcOffset: Number = 0, count: Number = src.length) {
     const doff = new u16(offset);
     const soff = new u16(srcOffset);
-    const send = new u16(end);
+    const send = new u16(count).add(soff);
     for (let i = soff.valueOf(); i < send.valueOf(); i++) {
       this.write(doff.add(i - soff.valueOf()), src[i]);
     }

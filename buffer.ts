@@ -33,11 +33,8 @@ export interface Memory {
    * @param srcOffset The offset to start reading from.
    * @param end The offset to stop reading from.
    */
-  block_copy(src: ArrayLike<Number>, offset: Number, srcOffset?: Number, end?: Number): void;
-  /**
-   * Create a reference-inequal copy.
-   */
-  clone(): Memory;
+  copy(src: ArrayLike<Number>, offset: Number, srcOffset?: Number, end?: Number): void;
+  len(): number;
 }
 
 /**
@@ -75,12 +72,23 @@ export class Buffer implements Memory {
     this.write(addr, s[0]);
     this.write(addr.add(1), s[1]);
   }
-  public block_copy(src: ArrayLike<Number>, offset: Number, srcOffset: Number = 0, end: Number = src.length) {
+  public copy(src: ArrayLike<Number>, offset: Number, srcOffset: Number = 0, end: Number = src.length) {
     const doff = new u16(offset);
     const soff = new u16(srcOffset);
     const send = new u16(end);
     for (let i = soff.valueOf(); i < send.valueOf(); i++) {
       this.write(doff.add(i - soff.valueOf()), src[i]);
+    }
+  }
+  public len(): number {
+    return this._back.length;
+  }
+  public static block_copy(src: Buffer, dst: Buffer, srcOffset: Number = 0, dstOffset: Number = 0, count: Number = src.len()) {
+    const doff = new u16(dstOffset);
+    const soff = new u16(srcOffset);
+    const cnt = new u16(count);
+    for (let i = soff.valueOf(); i < soff.add(cnt).valueOf(); i++) {
+      dst.write(doff.add(i - soff.valueOf()), src.read(i));
     }
   }
   public clone(): Buffer {

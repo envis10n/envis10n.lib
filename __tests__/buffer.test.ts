@@ -16,17 +16,26 @@ Deno.test("buffer_write_read_u16", () => {
   assertEquals(b.valueOf(), 512);
 });
 
-Deno.test("buffer_block_copy", () => {
+Deno.test("buffer_copy", () => {
   const buf = new Buffer(16);
-  buf.block_copy([10, 20, 30], 3);
+  buf.copy([10, 20, 30], 3);
   const c = [buf.read(3), buf.read(4), buf.read(5)];
   assertEquals<u8[]>(c, [new u8(10), new u8(20), new u8(30)]);
 });
 
-Deno.test("buffer_block_copy_offset", () => {
+Deno.test("buffer_copy_offset", () => {
   const buf = new Buffer(16);
-  buf.block_copy([10, 20, 30], 0, 2);
+  buf.copy([10, 20, 30], 0, 2);
   const c = buf.read(0);
+  assertEquals(c.valueOf(), 30);
+});
+
+Deno.test("buffer_block_copy", () => {
+  const buf = new Buffer(16);
+  const buf2 = new Buffer(16);
+  buf.copy([10, 20, 30], 0, 2);
+  Buffer.block_copy(buf, buf2, 0, 0, 2);
+  const c = buf2.read(0);
   assertEquals(c.valueOf(), 30);
 });
 
